@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<Style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        align-items: center;
+        justify-content: center;
+        display: flex;
+    }
+
+    .card {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin: 20px;
+        padding: 20px;
+        text-align: center;
+        width: 400px;
+    }
+</Style>
+
+<body>
+    <div class="container"">
+        <div class=" card">
+        <h2>Generate a Structured PDF</h2>
+
+        <label><strong>PDF Title:</strong></label><br>
+        <input type="text" id="pdfTitle" placeholder="Enter PDF title..." style="width: 100%;"><br><br>
+
+        <label><strong>Paper Size:</strong></label><br>
+        <select id="paperSize">
+            <option value="a4">A4 (210mm × 297mm)</option>
+            <option value="letter">Letter (8.5in × 11in)</option>
+        </select><br><br>
+
+        <label><strong>Introduction:</strong></label><br>
+        <textarea id="intro" rows="4" cols="50" placeholder="Write introduction here..."></textarea><br><br>
+
+        <label><strong>Body:</strong></label><br>
+        <textarea id="body" rows="6" cols="50" placeholder="Write body content here..."></textarea><br><br>
+
+        <label><strong>Conclusion:</strong></label><br>
+        <textarea id="conclusion" rows="4" cols="50" placeholder="Write conclusion here..."></textarea><br><br>
+
+        <button onclick="generatePDF()">Download PDF</button>
+    </div>
+    </div>
+    <script>
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+
+            let title = document.getElementById("pdfTitle").value || "My PDF";
+            let intro = document.getElementById("intro").value;
+            let body = document.getElementById("body").value;
+            let conclusion = document.getElementById("conclusion").value;
+            let paperSize = document.getElementById("paperSize").value;
+
+            // Set page size based on selection
+            let doc;
+            if (paperSize === "letter") {
+                doc = new jsPDF({ format: "letter" });
+            } else {
+                doc = new jsPDF({ format: "a4" });
+            }
+
+            // Add Title
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(16);
+            doc.text(title, 10, 15);
+
+            // Add Sections
+            doc.setFontSize(12);
+            doc.text("Introduction", 10, 30);
+            doc.setFont("helvetica", "normal");
+            doc.text(intro, 10, 40, { maxWidth: 180 });
+
+            doc.setFont("helvetica", "bold");
+            doc.text("Body", 10, 70);
+            doc.setFont("helvetica", "normal");
+            doc.text(body, 10, 80, { maxWidth: 180 });
+
+            doc.setFont("helvetica", "bold");
+            doc.text("Conclusion", 10, 110);
+            doc.setFont("helvetica", "normal");
+            doc.text(conclusion, 10, 120, { maxWidth: 180 });
+
+            // Save PDF
+            doc.save(`${title}.pdf`);
+        }
+    </script>
+</body>
+
+</html>
